@@ -1,0 +1,35 @@
+appId: com.bstudio.browser
+productName: Bstudio
+copyright: Copyright © 2026 Bstudio Architecture Team
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - "dist/**/*"
+  - "node_modules/node-pty/build/Release/*"
+  - "node_modules/node-pty/package.json"
+  - "node_modules/node-pty/lib/**/*"
+  - "package.json"
+
+asar: true
+asarUnpack:
+  - "**/node_modules/node-pty/build/Release/*"
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Development
+  synopsis: AI-Native Autonomous Diagnostic Browser & IDE for Full-Stack Developers
+  maintainer: bstudio-core@example.com
+
+win:
+  target:
+    - nsis
+    - portable
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true

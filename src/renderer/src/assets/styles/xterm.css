@@ -1,0 +1,14 @@
+@import '@xterm/xterm/css/xterm.css';
+
+.xterm {
+  padding: 6px 10px;
+  font-feature-settings: "liga" 0;
+  position: relative;
+  user-select: text;
+  -ms-user-select: text;
+  -webkit-user-select: text;
+}
+
+.xterm .xterm-viewport {
+  background-color: #121215 !important;
+}
