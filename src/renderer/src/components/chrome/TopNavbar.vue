@@ -183,16 +183,16 @@ const activeTitle = computed(() => {
   >
     <!-- Left Section: Logo & VS Code Menus -->
     <div class="flex items-center h-full no-drag">
-      <!-- App Icon / Brand -->
+      <!-- App Icon / Brand (Preserved Terminal Logo) -->
       <div
-        class="flex items-center gap-1.5 px-3 h-full hover:bg-white/5 transition-colors cursor-pointer"
+        class="flex items-center gap-2 pl-3 pr-2.5 h-full hover:bg-white/5 transition-colors cursor-pointer"
         @click="browserStore.navigate('bstudio://start')"
         title="Bstudio"
       >
         <div class="w-4 h-4 rounded bg-nvidia/20 border border-nvidia/40 flex items-center justify-center">
           <Terminal class="w-2.5 h-2.5 text-nvidia" />
         </div>
-        <span class="font-bold text-[11px] tracking-wider text-zinc-200">BSTUDIO</span>
+        <span class="font-semibold text-[13px] text-zinc-100 tracking-tight">Bstudio</span>
       </div>
 
       <!-- Menu Items List -->
@@ -487,41 +487,30 @@ const activeTitle = computed(() => {
           </div>
         </div>
       </nav>
+
+      <!-- Project Indicator & Open Folder shortcut -->
+      <div class="flex items-center gap-2 pl-2">
+        <span class="text-zinc-600 text-xs">|</span>
+        <button
+          @click="fsStore.openFolderDialog()"
+          class="flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-white/5 text-zinc-400 hover:text-zinc-200 text-[12px] font-sans transition-colors cursor-pointer"
+          :title="`Workspace: ${fsStore.currentFolderName || 'nvidia-landing'} (Click to Open Folder)`"
+        >
+          <span>{{ fsStore.currentFolderName || 'nvidia-landing' }}</span>
+          <ChevronRight class="w-3 h-3 text-zinc-500 rotate-90" />
+        </button>
+      </div>
     </div>
 
-    <!-- Center Section: Clean Window Title (Native Window Drag Area) -->
+    <!-- Center Section: Clean Window Drag Area -->
     <div class="flex-1 flex items-center justify-center h-full select-none pointer-events-none px-4">
-      <span class="text-[11px] text-zinc-400 font-sans tracking-wide truncate max-w-lg select-none">
-        {{ activeTitle }}
+      <span class="text-[11px] text-zinc-500 font-sans tracking-wide truncate max-w-sm select-none">
+        {{ fsStore.activeFile?.name || '' }}
       </span>
     </div>
 
-    <!-- Right Section: Quick Layout Toggles & Windows 11-style Control Buttons -->
+    <!-- Right Section: Windows Control Buttons -->
     <div class="flex items-center h-full shrink-0 no-drag">
-      <!-- Quick View Toggle Buttons -->
-      <div class="hidden sm:flex items-center mr-1 text-zinc-500">
-        <button
-          @click="triggerSplitView(browserStore.activeViewMode === 'split' ? 'editor' : 'split')"
-          class="w-7 h-7 flex items-center justify-center rounded hover:text-zinc-200 hover:bg-white/5 transition-colors"
-          title="Toggle Split Code/Web View"
-        >
-          <Layout class="w-3.5 h-3.5" :class="browserStore.activeViewMode === 'split' ? 'text-nvidia' : ''" />
-        </button>
-        <button
-          @click="browserStore.toggleDrawer('terminal')"
-          class="w-7 h-7 flex items-center justify-center rounded hover:text-zinc-200 hover:bg-white/5 transition-colors"
-          title="Toggle Terminal Drawer (Ctrl+`)"
-        >
-          <Terminal class="w-3.5 h-3.5" :class="browserStore.isDrawerOpen ? 'text-nvidia' : ''" />
-        </button>
-        <button
-          @click="browserStore.isCopilotOpen = !browserStore.isCopilotOpen"
-          class="w-7 h-7 flex items-center justify-center rounded hover:text-zinc-200 hover:bg-white/5 transition-colors"
-          title="Toggle AI Copilot (Ctrl+I)"
-        >
-          <Bot class="w-3.5 h-3.5" :class="browserStore.isCopilotOpen ? 'text-accent-blue' : ''" />
-        </button>
-      </div>
 
       <!-- Windows 11 Native-Style Titlebar Window Control Buttons -->
       <div class="flex items-center h-full">

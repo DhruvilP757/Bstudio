@@ -30,7 +30,13 @@ const isCreatingRootFolder = ref(false);
 const rootItemName = ref('');
 const rootInputRef = ref<HTMLInputElement | null>(null);
 
-onMounted(() => fsStore.fetchTree());
+onMounted(() => {
+  fsStore.fetchTree();
+  window.addEventListener('bstudio:focus-file-search', () => {
+    isFilterOpen.value = true;
+    nextTick(() => filterInputRef.value?.focus());
+  });
+});
 
 const toggleFilter = () => {
   isFilterOpen.value = !isFilterOpen.value;
@@ -124,10 +130,10 @@ const startSidebarResize = (e: PointerEvent) => {
     </div>
 
     <!-- Explorer Header & Action Toolbar -->
-    <div class="flex items-center justify-between px-3 h-9 border-b border-border shrink-0 bg-sidebar/95">
-      <span class="font-semibold uppercase tracking-wider text-zinc-400 text-[11px]">Explorer</span>
+    <div class="flex items-center justify-between px-3 h-9 border-b border-[#222226] shrink-0 bg-[#141418]">
+      <span class="font-semibold text-zinc-200 text-xs tracking-tight">Explorer</span>
 
-      <!-- VS Code Toolbar Action Buttons -->
+      <!-- Action Buttons -->
       <div class="flex items-center gap-0.5 text-zinc-400">
         <!-- New File -->
         <button
@@ -147,6 +153,15 @@ const startSidebarResize = (e: PointerEvent) => {
           <FolderPlus class="w-3.5 h-3.5" />
         </button>
 
+        <!-- Collapse All Folders -->
+        <button
+          @click="fsStore.collapseAll()"
+          class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/10 transition-colors"
+          title="Collapse Folders"
+        >
+          <ChevronsDownUp class="w-3.5 h-3.5" />
+        </button>
+
         <!-- Refresh Tree -->
         <button
           @click="fsStore.fetchTree()"
@@ -154,43 +169,6 @@ const startSidebarResize = (e: PointerEvent) => {
           title="Refresh Explorer"
         >
           <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': fsStore.isLoading }" />
-        </button>
-
-        <!-- Collapse All Folders -->
-        <button
-          @click="fsStore.collapseAll()"
-          class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/10 transition-colors"
-          title="Collapse Folders in Explorer"
-        >
-          <ChevronsDownUp class="w-3.5 h-3.5" />
-        </button>
-
-        <!-- Quick Filter / Search Files -->
-        <button
-          @click="toggleFilter"
-          class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/10 transition-colors"
-          :class="{ 'text-nvidia bg-white/5': isFilterOpen || fsStore.searchQuery }"
-          title="Filter by Name"
-        >
-          <Search class="w-3.5 h-3.5" />
-        </button>
-
-        <!-- Open File Dialog -->
-        <button
-          @click="fsStore.openFileDialog()"
-          class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/10 transition-colors"
-          title="Open File..."
-        >
-          <FileCode class="w-3.5 h-3.5" />
-        </button>
-
-        <!-- Open Folder Dialog -->
-        <button
-          @click="fsStore.openFolderDialog()"
-          class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/10 transition-colors"
-          title="Open Folder..."
-        >
-          <FolderOpen class="w-3.5 h-3.5" />
         </button>
       </div>
     </div>

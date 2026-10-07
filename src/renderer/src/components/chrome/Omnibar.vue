@@ -96,61 +96,47 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
 </script>
 
 <template>
-  <div class="glass-chrome flex items-center gap-2 px-3 h-11 shrink-0 z-40 select-none">
+  <div class="flex items-center gap-2.5 px-3 h-10 shrink-0 z-40 select-none bg-[#141418] border-b border-[#222226]">
 
-    <!-- Traffic-light area / Nav buttons -->
-    <div class="flex items-center gap-0.5 mr-1">
+    <!-- Browser Navigation Controls -->
+    <div class="flex items-center gap-1 shrink-0">
       <button
         @click="browserStore.goBack"
         :disabled="!browserStore.canGoBack"
-        class="w-7 h-7 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent transition-colors no-drag"
+        class="w-7 h-7 rounded flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent transition-colors no-drag"
         title="Back"
       >
-        <ArrowLeft class="w-3.5 h-3.5" />
+        <ArrowLeft class="w-4 h-4" />
       </button>
       <button
         @click="browserStore.goForward"
         :disabled="!browserStore.canGoForward"
-        class="w-7 h-7 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent transition-colors no-drag"
+        class="w-7 h-7 rounded flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-white/5 disabled:opacity-25 disabled:hover:bg-transparent transition-colors no-drag"
         title="Forward"
       >
-        <ArrowRight class="w-3.5 h-3.5" />
+        <ArrowRight class="w-4 h-4" />
       </button>
       <button
         @click="browserStore.isLoading ? browserStore.stopLoading() : browserStore.reload()"
-        class="w-7 h-7 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-colors no-drag"
+        class="w-7 h-7 rounded flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-colors no-drag"
         title="Reload"
       >
         <RotateCw v-if="!browserStore.isLoading" class="w-3.5 h-3.5" />
         <X v-else class="w-3.5 h-3.5 text-zinc-400" />
       </button>
-      <button
-        @click="browserStore.navigate('bstudio://start')"
-        class="w-7 h-7 rounded flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-colors no-drag"
-        title="Diagnostic Portal Home"
-      >
-        <Home class="w-3.5 h-3.5" />
-      </button>
     </div>
 
-
-
-    <!-- Safari-style Omnibar -->
-    <div
-      class="flex-1 max-w-2xl mx-auto no-drag"
-      :class="browserStore.activeViewMode === 'editor' ? 'opacity-40 pointer-events-none' : ''"
-    >
+    <!-- Central Address Bar (Matched to Screenshot) -->
+    <div class="flex-1 max-w-3xl no-drag">
       <div
-        class="flex items-center gap-2 h-8 px-3 rounded-lg transition-all duration-150"
-        :class="isEditing
-          ? 'bg-elevated border border-nvidia/50 shadow-glow-green'
-          : 'bg-white/5 border border-white/0 hover:bg-white/8 hover:border-white/8 cursor-text'"
+        class="flex items-center gap-2 h-7.5 px-3 rounded-lg bg-[#1a1a20] border border-[#2c2c34] transition-all duration-150 cursor-text"
+        :class="isEditing ? 'border-[#76b900]/70 ring-1 ring-[#76b900]/20' : 'hover:border-[#383842]'"
         @click="!isEditing && urlInputRef?.focus()"
       >
-        <!-- SSL Icon -->
-        <div class="shrink-0">
-          <Lock v-if="isHttps" class="w-3 h-3 text-nvidia/70" />
-          <AlertTriangle v-else class="w-3 h-3 text-diagnostic-amber/70" />
+        <!-- SSL Lock Icon -->
+        <div class="shrink-0 flex items-center">
+          <Lock v-if="isHttps" class="w-3 h-3 text-zinc-400" />
+          <AlertTriangle v-else class="w-3 h-3 text-diagnostic-amber" />
         </div>
 
         <!-- URL Input -->
@@ -161,9 +147,9 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
           @focus="handleFocus"
           @blur="handleBlur"
           @keydown="handleKeyDown"
-          class="flex-1 min-w-0 bg-transparent text-xs font-mono text-zinc-200 placeholder-zinc-600 focus:outline-none"
-          :class="isEditing ? 'text-zinc-100' : 'text-zinc-400'"
-          placeholder="Search or enter address..."
+          class="flex-1 min-w-0 bg-transparent text-xs font-mono text-zinc-200 placeholder-zinc-500 focus:outline-none"
+          :class="isEditing ? 'text-zinc-100' : 'text-zinc-300'"
+          placeholder="https://nvidia.com"
           spellcheck="false"
         />
 
@@ -174,63 +160,60 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
       </div>
     </div>
 
-    <!-- Right controls -->
-    <div class="flex items-center gap-1.5 no-drag">
-      <!-- Network throttle -->
-      <select
-        v-if="browserStore.activeViewMode !== 'editor'"
-        v-model="browserStore.networkProfile"
-        @change="browserStore.setNetwork(browserStore.networkProfile)"
-        class="h-7 bg-elevated border border-border text-2xs text-zinc-400 rounded px-2 focus:outline-none hover:border-borderHover cursor-pointer transition-colors"
-        title="Network throttling"
-      >
-        <option value="online">Online</option>
-        <option value="fast-3g">Fast 3G</option>
-        <option value="slow-3g">Slow 3G</option>
-        <option value="offline">Offline</option>
-      </select>
-
-      <!-- View mode tabs -->
-      <div class="flex items-center bg-elevated border border-border rounded overflow-hidden">
+    <!-- Right Controls: View Switcher & DevTools -->
+    <div class="flex items-center gap-2 shrink-0 no-drag ml-auto">
+      <!-- Segmented View Mode Buttons (Exact Match to Screenshot) -->
+      <div class="flex items-center gap-1 bg-[#1a1a20] p-0.5 rounded-lg border border-[#2c2c34]">
         <button
           @click="setMode('editor')"
-          :class="browserStore.activeViewMode === 'editor' ? 'bg-white/10 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300'"
-          class="flex items-center gap-1 px-2.5 h-7 text-2xs font-medium transition-colors"
+          :class="browserStore.activeViewMode === 'editor'
+            ? 'border border-[#76b900] bg-[#76b900]/10 text-[#7ee712] font-semibold'
+            : 'border border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/5'"
+          class="px-3 py-0.5 rounded text-xs transition-all"
           title="Code editor only"
         >
-          <Code2 class="w-3 h-3" />
           Code
         </button>
-        <div class="w-px h-4 bg-border" />
         <button
           @click="setMode('split')"
-          :class="browserStore.activeViewMode === 'split' ? 'bg-white/10 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300'"
-          class="flex items-center gap-1 px-2.5 h-7 text-2xs font-medium transition-colors"
-          title="Split view"
+          :class="browserStore.activeViewMode === 'split'
+            ? 'border border-[#76b900] bg-[#76b900]/10 text-[#7ee712] font-semibold'
+            : 'border border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/5'"
+          class="px-3 py-0.5 rounded text-xs transition-all"
+          title="Split code & browser view"
         >
-          <Layout class="w-3 h-3" />
           Split
         </button>
-        <div class="w-px h-4 bg-border" />
         <button
           @click="setMode('browser')"
-          :class="browserStore.activeViewMode === 'browser' ? 'bg-white/10 text-zinc-100' : 'text-zinc-500 hover:text-zinc-300'"
-          class="flex items-center gap-1 px-2.5 h-7 text-2xs font-medium transition-colors"
+          :class="browserStore.activeViewMode === 'browser'
+            ? 'border border-[#76b900] bg-[#76b900]/10 text-[#7ee712] font-semibold'
+            : 'border border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/5'"
+          class="px-3 py-0.5 rounded text-xs transition-all"
           title="Browser only"
         >
-          <Globe class="w-3 h-3" />
           Web
         </button>
       </div>
 
-      <!-- DevTools quick action -->
+      <!-- DevTools Button (Bordered, matched to screenshot) -->
       <button
         @click="window.electronAPI?.toggleDevTools()"
-        class="h-7 px-2 bg-elevated border border-border hover:border-nvidia/50 rounded flex items-center gap-1 text-2xs text-zinc-400 hover:text-nvidia transition-colors"
-        title="Toggle Chrome DevTools window (F12)"
+        class="h-7 px-2.5 bg-[#1a1a20] border border-[#2c2c34] hover:border-zinc-500 rounded-lg flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-colors"
+        title="Toggle DevTools (F12)"
       >
-        <Bug class="w-3 h-3 text-nvidia" />
-        <span class="hidden xl:inline">DevTools</span>
+        <Code2 class="w-3.5 h-3.5 text-zinc-400" />
+        <span>DevTools</span>
+      </button>
+
+      <!-- Toggle Copilot Panel -->
+      <button
+        @click="browserStore.isCopilotOpen = !browserStore.isCopilotOpen"
+        class="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-colors"
+        :class="browserStore.isCopilotOpen ? 'text-[#7ee712]' : ''"
+        title="Toggle Assistant Panel"
+      >
+        <Layout class="w-3.5 h-3.5 rotate-90" />
       </button>
     </div>
   </div>

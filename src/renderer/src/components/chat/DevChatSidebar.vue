@@ -4,7 +4,21 @@ import { useChatStore } from '../../stores/chat-store';
 import { useTelemetryStore } from '../../stores/telemetry-store';
 import { useBrowserStore } from '../../stores/browser-store';
 import ChatMessageItem from './ChatMessageItem.vue';
-import { Bot, Send, Sparkles, X, WifiOff, Zap, Key } from 'lucide-vue-next';
+import {
+  Bot,
+  Send,
+  Sparkles,
+  X,
+  ChevronDown,
+  Check,
+  Plus,
+  Code2,
+  Globe,
+  MoreHorizontal,
+  Key,
+  WifiOff,
+  Zap
+} from 'lucide-vue-next';
 
 const chatStore = useChatStore();
 const telemetryStore = useTelemetryStore();
@@ -12,6 +26,13 @@ const browserStore = useBrowserStore();
 const inputPrompt = ref('');
 const hasApiKey = ref(false);
 const messagesRef = ref<HTMLElement | null>(null);
+const isModelMenuOpen = ref(false);
+
+const models = [
+  { id: 'ultra', label: 'Nemotron 4 (Latest)' },
+  { id: 'nano', label: 'Nemotron 4 70B Instruct' },
+  { id: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' }
+];
 
 const checkApiKey = async () => {
   if (!window.electronAPI) return;
@@ -23,18 +44,25 @@ const checkApiKey = async () => {
 onMounted(checkApiKey);
 watch(() => chatStore.selectedProvider, checkApiKey);
 watch(() => browserStore.isApiKeyModalOpen, (isOpen) => {
-  if (!isOpen) {
-    checkApiKey();
-  }
+  if (!isOpen) checkApiKey();
 });
 
-const onProviderChange = () => {
-  if (chatStore.selectedProvider === 'gemini') {
-    chatStore.selectedModel = 'gemini-2.0-flash';
+const selectModel = (modelId: string) => {
+  chatStore.selectedModel = modelId;
+  if (modelId.startsWith('gemini')) {
+    chatStore.selectedProvider = 'gemini';
   } else {
-    chatStore.selectedModel = 'ultra';
+    chatStore.selectedProvider = 'nebius';
   }
+  isModelMenuOpen.value = false;
   checkApiKey();
+};
+
+const activeModelLabel = () => {
+  if (chatStore.selectedModel === 'ultra') return 'Nemotron 4 (Latest)';
+  if (chatStore.selectedModel === 'nano') return 'Nemotron 4 70B Instruct';
+  if (chatStore.selectedModel === 'gemini-2.0-flash') return 'Gemini 2.0 Flash';
+  return 'Nemotron 4 (Latest)';
 };
 
 const scrollToBottom = () => {
@@ -99,7 +127,7 @@ const startCopilotResize = (e: PointerEvent) => {
   <Transition name="sidebar">
     <div
       v-if="browserStore.isCopilotOpen"
-      class="relative h-full bg-sidebar border-l border-border flex flex-col shrink-0 z-20 overflow-hidden"
+      class="relative h-full bg-[#141418] border-l border-[#222226] flex flex-col shrink-0 z-20 overflow-hidden select-none"
       :style="{
         width: browserStore.copilotWidth + 'px',
         transition: browserStore.isDraggingResizer ? 'none' : 'width 150ms ease'
@@ -108,195 +136,194 @@ const startCopilotResize = (e: PointerEvent) => {
       <!-- Left Resizer Handle -->
       <div
         @pointerdown="startCopilotResize"
-        class="absolute top-0 left-0 w-1.5 h-full cursor-col-resize z-30 group hover:bg-nvidia/60 active:bg-nvidia transition-colors select-none"
-        title="Drag to resize Copilot"
+        class="absolute top-0 left-0 w-1.5 h-full cursor-col-resize z-30 group hover:bg-[#76b900]/60 active:bg-[#76b900] transition-colors select-none"
+        title="Drag to resize Assistant"
       >
         <div class="absolute inset-y-0 -left-1 -right-1 z-10" />
       </div>
 
-      <!-- Header -->
-      <div class="flex items-center justify-between px-3 h-10 border-b border-border shrink-0 bg-canvas/50">
+      <!-- Header (Matched to Reference Screenshot) -->
+      <div class="flex items-center justify-between px-3 h-10 border-b border-[#222226] shrink-0 bg-[#141418]">
+        <!-- Title with Nemotron Badge -->
         <div class="flex items-center gap-2">
-          <div
-            class="w-5 h-5 rounded flex items-center justify-center transition-colors"
-            :class="chatStore.selectedProvider === 'gemini' ? 'bg-accent-blue/15 text-accent-blue' : 'bg-nvidia/15 text-nvidia'"
-          >
-            <Sparkles v-if="chatStore.selectedProvider === 'gemini'" class="w-3.5 h-3.5" />
-            <Bot v-else class="w-3.5 h-3.5" />
+          <div class="w-6 h-6 rounded-md bg-[#76b900]/20 border border-[#76b900]/50 flex items-center justify-center text-[#7ee712]">
+            <Bot class="w-4 h-4" />
           </div>
-          <span class="text-xs font-semibold text-zinc-200">
-            {{ chatStore.selectedProvider === 'gemini' ? 'Gemini Copilot' : 'Nemotron Copilot' }}
-          </span>
+          <span class="text-xs font-semibold text-zinc-100 tracking-tight">Nemotron Assistant</span>
         </div>
 
-        <div class="flex items-center gap-1.5">
-          <!-- Provider selector -->
-          <select
-            v-model="chatStore.selectedProvider"
-            @change="onProviderChange"
-            class="h-6 bg-elevated border border-border text-2xs rounded px-1.5 focus:outline-none hover:border-borderHover cursor-pointer font-medium transition-colors"
-            :class="chatStore.selectedProvider === 'gemini' ? 'text-accent-blue border-accent-blue/30' : 'text-nvidia border-nvidia/30'"
-            title="Switch AI inference provider"
-          >
-            <option value="gemini">✨ Google Gemini</option>
-            <option value="nebius">⚡ Nebius Nemotron</option>
-          </select>
-
-          <!-- Model selector -->
-          <select
-            v-model="chatStore.selectedModel"
-            class="h-6 bg-elevated border border-border text-2xs text-zinc-300 rounded px-1.5 focus:outline-none hover:border-borderHover cursor-pointer"
-            title="Select model"
-          >
-            <template v-if="chatStore.selectedProvider === 'gemini'">
-              <option value="gemini-2.0-flash">2.0 Flash</option>
-              <option value="gemini-1.5-flash">1.5 Flash</option>
-              <option value="gemini-1.5-pro">1.5 Pro</option>
-            </template>
-            <template v-else>
-              <option value="ultra">Ultra 550B</option>
-              <option value="nano">Nano 30B</option>
-            </template>
-          </select>
-
-          <!-- Settings Button -->
+        <!-- Right Header Controls -->
+        <div class="flex items-center gap-1 text-zinc-400">
           <button
             @click="browserStore.isApiKeyModalOpen = true"
-            class="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-colors"
-            title="API Key Settings"
+            class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/5 transition-colors"
+            title="API Keys"
           >
             <Key class="w-3.5 h-3.5" />
           </button>
-
-          <!-- Close Button -->
+          <button
+            class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/5 transition-colors"
+            title="More Options"
+          >
+            <MoreHorizontal class="w-3.5 h-3.5" />
+          </button>
           <button
             @click="browserStore.isCopilotOpen = false"
-            class="w-6 h-6 flex items-center justify-center rounded text-zinc-600 hover:text-zinc-300 hover:bg-white/5 transition-colors"
-            title="Close Copilot"
+            class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/5 transition-colors"
+            title="Close Assistant"
           >
             <X class="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      <!-- Offline / No Key banner -->
+      <!-- Model Selector (Exact Match to Screenshot) -->
+      <div class="px-3 pt-2 pb-1.5 shrink-0 relative">
+        <button
+          @click="isModelMenuOpen = !isModelMenuOpen"
+          class="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#1c1c22] border border-[#2c2c34] hover:border-zinc-500 text-xs text-zinc-200 transition-colors"
+        >
+          <span class="font-sans">{{ activeModelLabel() }}</span>
+          <ChevronDown class="w-3.5 h-3.5 text-zinc-400 transition-transform" :class="{ 'rotate-180': isModelMenuOpen }" />
+        </button>
+
+        <!-- Model Dropdown -->
+        <div
+          v-if="isModelMenuOpen"
+          class="absolute left-3 right-3 top-10 mt-1 bg-[#1c1c22] border border-[#2c2c34] rounded-lg shadow-2xl py-1 z-50 text-xs text-zinc-200"
+        >
+          <button
+            v-for="m in models"
+            :key="m.id"
+            @click="selectModel(m.id)"
+            class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-[#76b900]/15 hover:text-white transition-colors text-left"
+          >
+            <span>{{ m.label }}</span>
+            <Check v-if="chatStore.selectedModel === m.id" class="w-3.5 h-3.5 text-[#76b900]" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Key Notice Banner (if missing) -->
       <div
         v-if="!hasApiKey"
-        class="flex items-center justify-between gap-2 px-3 py-1.5 bg-amber-500/10 border-b border-amber-500/20 shrink-0"
+        class="mx-3 my-1 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-between text-2xs text-amber-300 shrink-0"
       >
-        <div class="flex items-center gap-1.5 text-amber-400 text-2xs">
-          <WifiOff class="w-3 h-3 shrink-0" />
-          <span>No {{ chatStore.selectedProvider === 'gemini' ? 'Gemini' : 'Nebius' }} key configured</span>
-        </div>
+        <span class="flex items-center gap-1.5">
+          <WifiOff class="w-3 h-3" />
+          No key configured
+        </span>
         <button
           @click="browserStore.isApiKeyModalOpen = true"
-          class="text-2xs text-accent-blue hover:text-accent-blue/80 underline underline-offset-2 transition-colors shrink-0 font-medium"
+          class="underline hover:text-white font-medium"
         >
           Add Key
         </button>
       </div>
 
-      <!-- Incident cards -->
-      <div
-        v-if="telemetryStore.events.length > 0"
-        class="shrink-0 border-b border-border bg-canvas/30"
-      >
-        <div class="px-3 pt-2 pb-1">
-          <p class="text-2xs font-semibold uppercase tracking-wider text-zinc-600">Detected Incidents</p>
-        </div>
-        <div class="px-2 pb-2 space-y-1.5 max-h-36 overflow-y-auto">
-          <div
-            v-for="item in telemetryStore.events.slice(0, 3)"
-            :key="item.id"
-            class="rounded-md p-2.5 border transition-colors"
-            :class="item.severity === 'critical'
-              ? 'bg-diagnostic-crimson/5 border-diagnostic-crimson/20 hover:border-diagnostic-crimson/40'
-              : 'bg-diagnostic-amber/5 border-diagnostic-amber/20 hover:border-diagnostic-amber/40'"
-          >
-            <div class="flex items-start justify-between gap-2">
-              <p
-                class="text-2xs font-semibold leading-tight"
-                :class="item.severity === 'critical' ? 'text-diagnostic-crimson' : 'text-diagnostic-amber'"
-              >{{ item.title }}</p>
-              <button
-                @click="chatStore.addContextChip(item); chatStore.sendMessage(`Diagnose and fix: ${item.title} — ${item.summary}`)"
-                class="shrink-0 flex items-center gap-1 text-2xs bg-nvidia hover:bg-nvidia-bright text-black font-semibold px-2 py-0.5 rounded transition-colors"
-              >
-                <Zap class="w-2.5 h-2.5" />
-                Fix
-              </button>
-            </div>
-            <p class="text-zinc-500 text-2xs mt-0.5 line-clamp-2">{{ item.summary }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Message list -->
+      <!-- Messages Area -->
       <div ref="messagesRef" class="flex-1 overflow-y-auto px-3 py-2 space-y-3">
-        <!-- Welcome message -->
-        <div v-if="chatStore.messages.length === 0" class="flex flex-col items-center gap-3 py-8 text-center">
-          <div
-            class="w-10 h-10 rounded-xl flex items-center justify-center"
-            :class="chatStore.selectedProvider === 'gemini' ? 'bg-accent-blue/15 text-accent-blue' : 'bg-nvidia/15 text-nvidia'"
-          >
-            <Sparkles v-if="chatStore.selectedProvider === 'gemini'" class="w-5 h-5" />
-            <Bot v-else class="w-5 h-5" />
-          </div>
-          <div>
-            <p class="text-zinc-200 text-xs font-semibold">
-              {{ chatStore.selectedProvider === 'gemini' ? 'Google Gemini Copilot' : 'NVIDIA Nemotron Copilot' }}
-            </p>
-            <p class="text-zinc-500 text-2xs mt-1 leading-relaxed">
-              Ask me to diagnose errors, review code, or generate patches.
-            </p>
+        <!-- Welcome Card (Matching Reference Screenshot 1) -->
+        <div
+          v-if="chatStore.messages.length === 0"
+          class="bg-[#18181f] border border-[#2c2c34] rounded-xl p-4 my-2 text-xs"
+        >
+          <h3 class="font-semibold text-zinc-100 text-sm mb-1">Welcome to Nemotron Assistant</h3>
+          <p class="text-zinc-400 text-xs mb-4 leading-relaxed">
+            Your AI partner for a faster, more productive development experience in Bstudio.
+          </p>
+
+          <div class="space-y-2.5">
+            <div class="flex items-center gap-2 text-zinc-300">
+              <div class="w-4 h-4 rounded-full bg-[#76b900]/20 flex items-center justify-center text-[#7ee712]">
+                <Check class="w-2.5 h-2.5" />
+              </div>
+              <span>Understand your codebase</span>
+            </div>
+            <div class="flex items-center gap-2 text-zinc-300">
+              <div class="w-4 h-4 rounded-full bg-[#76b900]/20 flex items-center justify-center text-[#7ee712]">
+                <Check class="w-2.5 h-2.5" />
+              </div>
+              <span>Help you build, debug, and refactor</span>
+            </div>
+            <div class="flex items-center gap-2 text-zinc-300">
+              <div class="w-4 h-4 rounded-full bg-[#76b900]/20 flex items-center justify-center text-[#7ee712]">
+                <Check class="w-2.5 h-2.5" />
+              </div>
+              <span>Answer questions about web technologies</span>
+            </div>
           </div>
         </div>
 
+        <!-- Rendered Chat Messages -->
         <ChatMessageItem
           v-for="(msg, index) in chatStore.messages"
           :key="index"
           :message="msg"
         />
 
+        <!-- Generation Spinner -->
         <div
           v-if="chatStore.isGenerating"
-          class="flex items-center gap-2 text-2xs py-1"
-          :class="chatStore.selectedProvider === 'gemini' ? 'text-accent-blue' : 'text-nvidia'"
+          class="flex items-center gap-2 text-2xs py-1 text-[#7ee712]"
         >
-          <Sparkles class="w-3 h-3 animate-spin" />
-          <span>Generating response via {{ chatStore.selectedProvider === 'gemini' ? 'Gemini' : 'Nemotron' }}…</span>
+          <Sparkles class="w-3.5 h-3.5 animate-spin" />
+          <span>Nemotron is formulating response…</span>
         </div>
       </div>
 
-      <!-- Input -->
-      <div class="px-3 py-2.5 border-t border-border shrink-0 bg-canvas/50">
-        <div class="relative">
+      <!-- Composer Card (Matched to Reference Screenshot) -->
+      <div class="p-3 border-t border-[#222226] shrink-0 bg-[#141418]">
+        <div class="bg-[#1a1a20] border border-[#2c2c34] rounded-xl p-2.5 transition-colors focus-within:border-zinc-500">
           <textarea
             v-model="inputPrompt"
             @keydown="handleKeyDown"
             rows="2"
-            class="w-full bg-elevated border border-border rounded-lg px-3 py-2 pr-10 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none resize-none font-sans leading-relaxed transition-colors"
-            :class="chatStore.selectedProvider === 'gemini' ? 'focus:border-accent-blue/60' : 'focus:border-nvidia/60'"
-            :placeholder="`Ask ${chatStore.selectedProvider === 'gemini' ? 'Gemini' : 'Nemotron'} about errors, write code, run terminal...`"
+            class="w-full bg-transparent text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none resize-none font-sans leading-relaxed"
+            placeholder="Ask Nemotron anything..."
             :disabled="chatStore.isGenerating"
           />
-          <button
-            @click="handleSend"
-            :disabled="!inputPrompt.trim() || chatStore.isGenerating"
-            class="absolute right-2 bottom-2 w-6 h-6 flex items-center justify-center rounded-md transition-colors disabled:opacity-30"
-            :class="chatStore.selectedProvider === 'gemini' ? 'bg-accent-blue hover:bg-accent-blue/80 text-white' : 'bg-nvidia hover:bg-nvidia-bright text-black'"
-          >
-            <Send class="w-3 h-3" />
-          </button>
+
+          <!-- Composer Toolbar Row -->
+          <div class="flex items-center justify-between pt-1.5 mt-1 border-t border-[#24242c] text-zinc-400">
+            <!-- Left contextual pills / actions -->
+            <div class="flex items-center gap-1.5">
+              <button
+                class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/5 transition-colors"
+                title="Add Attachment"
+              >
+                <Plus class="w-3.5 h-3.5" />
+              </button>
+              <button
+                class="flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] hover:text-white hover:bg-white/5 transition-colors text-zinc-400"
+                title="Add Context"
+              >
+                <Code2 class="w-3 h-3 text-zinc-400" />
+                <span>Context</span>
+              </button>
+              <button
+                class="flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] hover:text-white hover:bg-white/5 transition-colors text-zinc-400"
+                title="Search Web"
+              >
+                <Globe class="w-3 h-3 text-zinc-400" />
+                <span>Web</span>
+              </button>
+            </div>
+
+            <!-- Send Button -->
+            <button
+              @click="handleSend"
+              :disabled="!inputPrompt.trim() || chatStore.isGenerating"
+              class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#76b900] hover:bg-[#8bd000] text-black transition-all disabled:opacity-30 disabled:bg-zinc-700 disabled:text-zinc-500"
+              title="Send (Enter)"
+            >
+              <Send class="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
-        <p class="text-2xs text-zinc-600 mt-1.5 flex items-center justify-between">
-          <span>
-            <kbd class="font-mono bg-elevated border border-border rounded px-1">Enter</kbd> send
-            · <kbd class="font-mono bg-elevated border border-border rounded px-1">Shift+Enter</kbd> newline
-          </span>
-          <span class="text-[10px] text-zinc-500">
-            Model: {{ chatStore.selectedModel }}
-          </span>
+
+        <p class="text-[10px] text-zinc-500 text-center mt-1.5">
+          Nemotron can make mistakes. Verify important info.
         </p>
       </div>
     </div>

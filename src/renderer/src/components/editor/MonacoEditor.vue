@@ -12,7 +12,10 @@ import {
   AlignLeft,
   Palette,
   FolderOpen,
-  Play
+  Play,
+  Hash,
+  Atom,
+  MoreHorizontal
 } from 'lucide-vue-next';
 
 let monaco: any = null;
@@ -23,6 +26,20 @@ let disposables: any[] = [];
 const fsStore = useFsStore();
 const extensionsStore = useExtensionsStore();
 const browserStore = useBrowserStore();
+
+const getTabIcon = (filename?: string) => {
+  const ext = (filename || '').split('.').pop()?.toLowerCase();
+  if (['tsx', 'jsx'].includes(ext || '')) return Atom;
+  if (['css', 'scss', 'less'].includes(ext || '')) return Hash;
+  return FileCode;
+};
+
+const getTabColor = (filename?: string) => {
+  const ext = (filename || '').split('.').pop()?.toLowerCase();
+  if (['tsx', 'jsx'].includes(ext || '')) return 'text-[#00d8ff]';
+  if (['css', 'scss', 'less'].includes(ext || '')) return 'text-[#c084fc]';
+  return 'text-nvidia';
+};
 
 
 const defineThemes = () => {
@@ -42,10 +59,10 @@ const defineThemes = () => {
       { token: 'variable', foreground: 'e06c75' }
     ],
     colors: {
-      'editor.background': '#282c34',
-      'editor.foreground': '#abb2bf',
-      'editor.lineHighlightBackground': '#2c313c',
-      'editorCursor.foreground': '#528bff',
+      'editor.background': '#141418',
+      'editor.foreground': '#e4e4e7',
+      'editor.lineHighlightBackground': '#1a1a20',
+      'editorCursor.foreground': '#76b900',
       'editorLineNumber.foreground': '#495162'
     }
   });
@@ -639,72 +656,93 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col bg-[#1e1e24] select-none">
-    <!-- Editor Tabs (VS Code style) -->
-    <div class="flex items-center bg-canvas border-b border-border/80 overflow-x-auto text-xs shrink-0">
+  <div class="w-full h-full flex flex-col bg-[#141418] select-none">
+    <!-- Editor Tabs Bar (Matched to Reference Screenshot) -->
+    <div class="flex items-center bg-[#141418] border-b border-[#222226] overflow-x-auto text-xs shrink-0 h-9">
       <div
         v-for="file in fsStore.openFiles"
         :key="file.path"
         @click="fsStore.activeFilePath = file.path"
-        class="flex items-center gap-2 px-3 py-1.5 border-r border-border/60 cursor-pointer transition-colors"
+        class="flex items-center gap-2 px-3 h-full border-r border-[#222226] cursor-pointer transition-colors"
         :class="fsStore.activeFilePath === file.path
-          ? 'bg-sidebar text-white border-t-2 border-t-nvidia'
-          : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'"
+          ? 'bg-[#1b1b22] text-white border-t-2 border-t-[#76b900] font-medium'
+          : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border-t-2 border-t-transparent'"
       >
-        <FileCode class="w-3.5 h-3.5 text-nvidia" />
-        <span class="truncate max-w-[120px]">{{ file.name }}</span>
+        <component :is="getTabIcon(file.name)" class="w-3.5 h-3.5" :class="getTabColor(file.name)" />
+        <span class="truncate max-w-[140px]">{{ file.name }}</span>
         <span v-if="file.isDirty" class="w-2 h-2 rounded-full bg-diagnostic-amber"></span>
         <button
           @click.stop="fsStore.closeFile(file.path)"
-          class="hover:text-white rounded p-0.5 text-zinc-500 hover:bg-white/10"
+          class="hover:text-white rounded p-0.5 text-zinc-500 hover:bg-white/10 ml-0.5"
+          title="Close tab"
         >
           <X class="w-3 h-3" />
         </button>
       </div>
 
-      <!-- Quick Actions on Right (Run Code, Format, Theme, Save) -->
-      <div v-if="fsStore.activeFile" class="ml-auto pr-2 flex items-center gap-1.5">
-        <!-- Code Runner (Run Code in Terminal) -->
+      <!-- Quick Actions on Right (Format, Save, More) -->
+      <div v-if="fsStore.activeFile" class="ml-auto pr-2 flex items-center gap-1 text-zinc-400">
+        <!-- Code Runner -->
         <button
           v-if="extensionsStore.isCodeRunnerActive"
           @click="runCurrentFile"
           class="flex items-center gap-1 text-2xs bg-nvidia/15 text-nvidia border border-nvidia/40 hover:bg-nvidia/25 px-2 py-0.5 rounded transition-all font-semibold shadow-sm"
-          title="Run Code in Terminal (Code Runner Extension)"
+          title="Run Code in Terminal"
         >
           <Play class="w-3 h-3 fill-nvidia text-nvidia" />
           <span>Run</span>
         </button>
 
-        <!-- Prettier Format Button -->
+        <!-- Format Document -->
         <button
           @click="formatDocument"
-          class="flex items-center gap-1 text-2xs text-zinc-400 hover:text-white px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
+          class="p-1 hover:text-white hover:bg-white/5 rounded transition-colors text-zinc-400"
           title="Format Document (Shift+Alt+F)"
         >
-          <AlignLeft class="w-3 h-3 text-nvidia" />
-          <span>Format</span>
+          <AlignLeft class="w-3.5 h-3.5" />
+        </button>
+
+        <!-- Save File -->
+        <button
+          @click="fsStore.saveActiveFile"
+          class="p-1 hover:text-white hover:bg-white/5 rounded transition-colors text-zinc-400"
+          title="Save File (Ctrl+S)"
+        >
+          <Save class="w-3.5 h-3.5" />
         </button>
 
         <!-- Theme Badge -->
         <button
           @click="openExtensions"
-          class="flex items-center gap-1 text-2xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-white/5 transition-colors"
-          title="Active Theme (Change in Extensions)"
+          class="p-1 hover:text-white hover:bg-white/5 rounded transition-colors text-zinc-400"
+          title="Change Theme in Extensions"
         >
-          <Palette class="w-3 h-3 text-[#ff9f0a]" />
-          <span class="capitalize">{{ extensionsStore.activeTheme.replace(/-/g, ' ') }}</span>
+          <Palette class="w-3.5 h-3.5 text-[#ff9f0a]" />
         </button>
 
-        <!-- Save Button -->
+        <!-- More Actions -->
         <button
-          @click="fsStore.saveActiveFile"
-          class="flex items-center gap-1 text-2xs text-zinc-400 hover:text-white px-2 py-1 rounded hover:bg-white/5 transition-colors"
-          title="Save File (Ctrl+S)"
+          class="p-1 hover:text-white hover:bg-white/5 rounded transition-colors text-zinc-400"
+          title="More Actions"
         >
-          <Save class="w-3 h-3 text-emerald-400" />
-          <span>Save</span>
+          <MoreHorizontal class="w-3.5 h-3.5" />
         </button>
       </div>
+    </div>
+
+    <!-- Breadcrumb Row (Direct match to reference screenshot) -->
+    <div
+      v-if="fsStore.activeFile"
+      class="flex items-center gap-1.5 px-4 h-6 bg-[#16161b] border-b border-[#222226] text-[11px] text-zinc-400 shrink-0 font-sans select-none"
+    >
+      <span class="text-zinc-500 hover:text-zinc-300 cursor-pointer">src</span>
+      <span class="text-zinc-600">></span>
+      <span class="flex items-center gap-1 text-zinc-300 hover:text-white cursor-pointer font-medium">
+        <component :is="getTabIcon(fsStore.activeFile.name)" class="w-3 h-3" :class="getTabColor(fsStore.activeFile.name)" />
+        <span>{{ fsStore.activeFile.name }}</span>
+      </span>
+      <span class="text-zinc-600">></span>
+      <span class="text-zinc-500 hover:text-zinc-300 cursor-pointer">...</span>
     </div>
 
     <!-- Empty State Welcome Screen (VS Code inspired) -->

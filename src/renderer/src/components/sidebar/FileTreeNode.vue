@@ -14,7 +14,11 @@ import {
   Pencil,
   Trash2,
   ExternalLink,
-  Copy
+  Copy,
+  Hash,
+  Atom,
+  Zap,
+  Info
 } from 'lucide-vue-next';
 import type { FileNode } from '../../../shared/fs-types';
 
@@ -168,7 +172,11 @@ const isDirty = computed(() => {
 const getFileIcon = (node: FileNode) => {
   const ext = node.extension?.toLowerCase();
   const name = node.name.toLowerCase();
-  if (['.vue', '.ts', '.js', '.jsx', '.tsx', '.py', '.go', '.rs', '.cpp', '.c', '.cs', '.java'].includes(ext || '')) return FileCode2;
+  if (['.tsx', '.jsx'].includes(ext || '')) return Atom;
+  if (['.css', '.scss', '.sass', '.less'].includes(ext || '')) return Hash;
+  if (name.includes('vite.config')) return Zap;
+  if (name === 'readme.md' || name.startsWith('readme')) return Info;
+  if (['.vue', '.ts', '.js', '.py', '.go', '.rs', '.cpp', '.c', '.cs', '.java'].includes(ext || '')) return FileCode2;
   if (['.json', '.yaml', '.yml', '.toml', '.lock'].includes(ext || '') || name.includes('config')) return FileJson;
   if (['.md', '.txt', '.csv', '.log'].includes(ext || '')) return FileText;
   return File;
@@ -176,27 +184,26 @@ const getFileIcon = (node: FileNode) => {
 
 const extColor = (ext?: string, name?: string) => {
   const n = (name || '').toLowerCase();
-  if (n.startsWith('.git')) return 'text-[#f05032]';
-  if (n.includes('package.json') || n.includes('tsconfig')) return 'text-[#3178c6]';
+  if (n.startsWith('.git')) return 'text-zinc-500';
+  if (n.includes('package.json')) return 'text-[#facc15]';
+  if (n.includes('tsconfig')) return 'text-[#38bdf8]';
+  if (n.includes('vite.config')) return 'text-[#fbbf24]';
+  if (n.startsWith('readme')) return 'text-[#60a5fa]';
 
   switch (ext?.toLowerCase()) {
+    case '.tsx': case '.jsx': return 'text-[#00d8ff]';
+    case '.css': case '.scss': return 'text-[#c084fc]';
     case '.vue':  return 'text-[#42b883]';
-    case '.ts': case '.tsx': return 'text-[#3178c6]';
-    case '.js': case '.jsx': return 'text-[#f7df1e]';
-    case '.py':   return 'text-[#4b8bbe]';
-    case '.json': return 'text-[#ff9f0a]';
-    case '.html': return 'text-[#e34f26]';
-    case '.css': case '.scss': return 'text-[#bf5af2]';
-    case '.md':   return 'text-[#58a6ff]';
-    case '.rs':   return 'text-[#dea584]';
+    case '.ts':   return 'text-[#38bdf8]';
+    case '.js':   return 'text-[#facc15]';
+    case '.py':   return 'text-[#38bdf8]';
+    case '.json': return 'text-[#facc15]';
+    case '.html': return 'text-[#fb923c]';
+    case '.md':   return 'text-[#60a5fa]';
+    case '.rs':   return 'text-[#f97316]';
     case '.go':   return 'text-[#00add8]';
-    case '.cpp': case '.c': case '.h': return 'text-[#5c8cbc]';
-    case '.java': return 'text-[#b07219]';
-    case '.cs':   return 'text-[#178600]';
-    case '.sh': case '.ps1': return 'text-[#38bdf8]';
-    case '.yaml': case '.yml': case '.toml': return 'text-[#e5c07b]';
-    case '.svg': case '.png': case '.ico': return 'text-[#a855f7]';
-    default:      return 'text-zinc-500';
+    case '.sh': case '.ps1': return 'text-[#4ade80]';
+    default:      return 'text-zinc-400';
   }
 };
 </script>
@@ -324,10 +331,10 @@ const extColor = (ext?: string, name?: string) => {
       v-else-if="!node.isDirectory"
       @click="fsStore.openFile(node.path)"
       @contextmenu="openContextMenu"
-      class="w-full flex items-center py-[3px] pr-2 rounded-none transition-colors text-left group/row"
+      class="w-full flex items-center py-[3.5px] pr-2 rounded-none transition-colors text-left group/row"
       :class="fsStore.activeFilePath === node.path
-        ? 'bg-white/10 text-zinc-100 border-l-2 border-nvidia'
-        : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05] border-l-2 border-transparent'"
+        ? 'bg-[#181d19] text-white border-l-2 border-[#76b900] font-medium'
+        : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] border-l-2 border-transparent'"
       :style="{ paddingLeft: `${currentDepth * 14 + 6}px` }"
     >
       <!-- 16px Spacer perfectly matching Folder's Chevron -->

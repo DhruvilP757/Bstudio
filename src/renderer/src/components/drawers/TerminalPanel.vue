@@ -157,8 +157,11 @@ onBeforeUnmount(() => {
     @click="focusTerminal"
     tabindex="0"
   >
-    <!-- Tab bar for multiple terminal sessions & actions -->
-    <div class="flex items-center justify-between bg-sidebar border-b border-border h-8 px-2 shrink-0 select-none">
+    <!-- Tab bar for multiple terminal sessions & actions (shown if >1 session) -->
+    <div
+      v-if="terminalStore.sessions.length > 1"
+      class="flex items-center justify-between bg-[#141418] border-b border-[#222226] h-7 px-2 shrink-0 select-none"
+    >
       <div class="flex items-center gap-1 overflow-x-auto">
         <button
           v-for="session in terminalStore.sessions"
