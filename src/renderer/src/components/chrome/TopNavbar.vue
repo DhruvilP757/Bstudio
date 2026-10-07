@@ -107,7 +107,7 @@ const handleClose = () => {
 // Menu Actions
 const triggerNewFile = () => {
   closeMenu();
-  fsStore.openFileDialog();
+  fsStore.createUntitledFile();
 };
 
 const triggerOpenFile = () => {

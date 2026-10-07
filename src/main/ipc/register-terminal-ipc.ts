@@ -2,9 +2,10 @@ import { ipcMain } from 'electron';
 import { PtyManager } from '../terminal/pty-manager';
 import { IPC_CHANNELS } from '../../shared/ipc-channels';
 
-export function registerTerminalIpc(ptyManager: PtyManager, projectRoot: string): void {
+export function registerTerminalIpc(ptyManager: PtyManager, getProjectRoot: string | (() => string)): void {
   ipcMain.handle(IPC_CHANNELS.PTY_CREATE, async (_, { sessionId, cols, rows }) => {
-    ptyManager.createSession(sessionId, cols, rows, projectRoot);
+    const cwd = typeof getProjectRoot === 'function' ? getProjectRoot() : getProjectRoot;
+    ptyManager.createSession(sessionId, cols, rows, cwd);
   });
 
   ipcMain.handle(IPC_CHANNELS.PTY_WRITE, async (_, { sessionId, data }) => {

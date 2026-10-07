@@ -12,7 +12,8 @@ import {
   X,
   ChevronRight,
   ChevronsDownUp,
-  File
+  File,
+  FileCode
 } from 'lucide-vue-next';
 import FileTreeNode from './FileTreeNode.vue';
 
@@ -174,6 +175,15 @@ const startSidebarResize = (e: PointerEvent) => {
           <Search class="w-3.5 h-3.5" />
         </button>
 
+        <!-- Open File Dialog -->
+        <button
+          @click="fsStore.openFileDialog()"
+          class="w-6 h-6 flex items-center justify-center rounded hover:text-white hover:bg-white/10 transition-colors"
+          title="Open File..."
+        >
+          <FileCode class="w-3.5 h-3.5" />
+        </button>
+
         <!-- Open Folder Dialog -->
         <button
           @click="fsStore.openFolderDialog()"
@@ -239,13 +249,22 @@ const startSidebarResize = (e: PointerEvent) => {
       <div v-if="!fsStore.isLoading && fsStore.fileTree.length === 0" class="flex flex-col items-center gap-3 px-4 py-8 text-center">
         <FolderOpen class="w-8 h-8 text-zinc-700" />
         <p class="text-zinc-500 text-xs leading-relaxed">No files in workspace.<br/>Open a folder or project to begin.</p>
-        <button
-          @click="fsStore.openFolderDialog()"
-          class="bg-nvidia hover:bg-nvidia-bright text-black font-semibold text-xs px-3 py-1.5 rounded transition-colors flex items-center gap-1.5"
-        >
-          <FolderOpen class="w-3.5 h-3.5" />
-          Open Folder
-        </button>
+        <div class="flex items-center gap-2">
+          <button
+            @click="fsStore.openFolderDialog()"
+            class="bg-nvidia hover:bg-nvidia-bright text-black font-semibold text-xs px-3 py-1.5 rounded transition-colors flex items-center gap-1.5"
+          >
+            <FolderOpen class="w-3.5 h-3.5" />
+            Open Folder
+          </button>
+          <button
+            @click="fsStore.openFileDialog()"
+            class="bg-white/10 hover:bg-white/15 text-white font-semibold text-xs px-3 py-1.5 rounded transition-colors flex items-center gap-1.5"
+          >
+            <FileCode class="w-3.5 h-3.5" />
+            Open File
+          </button>
+        </div>
       </div>
 
       <!-- Loading shimmer -->

@@ -131,6 +131,12 @@ onMounted(() => {
       handleSidebarTabSelect(e.detail);
     }
   });
+
+  window.addEventListener('bstudio:ensure-editor-visible', () => {
+    if (browserStore.activeViewMode === 'browser') {
+      browserStore.activeViewMode = 'split';
+    }
+  });
 });
 
 // Keep browser view visibility in sync with view mode

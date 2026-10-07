@@ -53,11 +53,24 @@ export const useFsStore = defineStore('fs', {
         if (!res.canceled && res.folderName) {
           this.currentFolderName = res.folderName;
           this.currentFolderPath = res.folderPath || '';
+          this.openFiles = [];
+          this.activeFilePath = '';
           try {
             localStorage.setItem('bstudio_folder_name', res.folderName);
             if (res.folderPath) localStorage.setItem('bstudio_folder_path', res.folderPath);
           } catch {}
           await this.fetchTree();
+          window.dispatchEvent(new CustomEvent('bstudio:open-sidebar', { detail: 'explorer' }));
+          window.dispatchEvent(new CustomEvent('bstudio:ensure-editor-visible'));
+
+          // Auto-open primary documentation or project file if available
+          const preferredFile = this.fileTree.find(
+            (f) => !f.isDirectory && /^(readme\.md|package\.json|index\.(html|ts|js)|main\.(ts|js|py))$/i.test(f.name)
+          ) || this.fileTree.find((f) => !f.isDirectory);
+
+          if (preferredFile) {
+            await this.openFile(preferredFile.path);
+          }
         }
       } catch (err) {
         console.error('Failed to open folder:', err);
@@ -83,6 +96,8 @@ export const useFsStore = defineStore('fs', {
             });
             this.activeFilePath = path;
           }
+          window.dispatchEvent(new CustomEvent('bstudio:ensure-editor-visible'));
+          window.dispatchEvent(new CustomEvent('bstudio:open-sidebar', { detail: 'explorer' }));
         }
       } catch (err) {
         console.error('Failed to open file:', err);

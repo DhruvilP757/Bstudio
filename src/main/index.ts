@@ -191,11 +191,11 @@ class BstudioApplication {
     // 3. Register IPC Registrars
     registerBrowserIpc(this.viewManager);
     registerCdpIpc(this.elementInspector, this.memoryProfiler, this.securityAuditor, this.networkThrottler);
-    registerTerminalIpc(this.ptyManager, this.projectRoot);
+    const fsState = registerFsIpc(this.projectRoot, this.mainWindow, this.viewManager);
+    registerTerminalIpc(this.ptyManager, () => fsState.getProjectRoot());
     registerAiIpc(this.nebiusClient, this.patchEngine);
     registerStorageIpc(this.secureStorage, this.nebiusClient);
     registerLoadIpc(this.loadOrchestrator);
-    const fsState = registerFsIpc(this.projectRoot, this.mainWindow, this.viewManager);
     registerGitIpc(() => fsState.getProjectRoot(), this.mainWindow);
     registerExtensionsIpc();
 

@@ -12,41 +12,64 @@ export function registerFsIpc(
 ): { getProjectRoot: () => string } {
   let currentProjectRoot = projectRoot;
 
+  let isFolderDialogOpen = false;
+  let isFileDialogOpen = false;
+
   ipcMain.handle(IPC_CHANNELS.FS_OPEN_FOLDER, async () => {
-    const result = await dialog.showOpenDialog(mainWindow, {
-      title: 'Open Folder in Bstudio',
-      properties: ['openDirectory', 'createDirectory']
-    });
-    if (result.canceled || !result.filePaths.length) {
-      return { canceled: true };
+    if (isFolderDialogOpen) return { canceled: true };
+    isFolderDialogOpen = true;
+    try {
+      const result = await dialog.showOpenDialog({
+        title: 'Open Folder in Bstudio',
+        properties: ['openDirectory', 'createDirectory'],
+        defaultPath: fs.existsSync(currentProjectRoot) ? currentProjectRoot : undefined
+      });
+      if (result.canceled || !result.filePaths.length) {
+        return { canceled: true };
+      }
+      const selectedFolder = result.filePaths[0];
+      currentProjectRoot = selectedFolder;
+      return {
+        canceled: false,
+        folderPath: selectedFolder,
+        folderName: path.basename(selectedFolder)
+      };
+    } catch (err: any) {
+      console.error('[FS IPC] Open folder dialog error:', err);
+      return { canceled: true, error: err.message };
+    } finally {
+      isFolderDialogOpen = false;
     }
-    const selectedFolder = result.filePaths[0];
-    currentProjectRoot = selectedFolder;
-    return {
-      canceled: false,
-      folderPath: selectedFolder,
-      folderName: path.basename(selectedFolder)
-    };
   });
 
   ipcMain.handle(IPC_CHANNELS.FS_OPEN_FILE, async () => {
-    const result = await dialog.showOpenDialog(mainWindow, {
-      title: 'Open File in Bstudio',
-      properties: ['openFile']
-    });
-    if (result.canceled || !result.filePaths.length) {
-      return { canceled: true };
+    if (isFileDialogOpen) return { canceled: true };
+    isFileDialogOpen = true;
+    try {
+      const result = await dialog.showOpenDialog({
+        title: 'Open File in Bstudio',
+        properties: ['openFile'],
+        defaultPath: fs.existsSync(currentProjectRoot) ? currentProjectRoot : undefined
+      });
+      if (result.canceled || !result.filePaths.length) {
+        return { canceled: true };
+      }
+      const selectedFile = result.filePaths[0];
+      const content = fs.readFileSync(selectedFile, 'utf8');
+      const rel = path.relative(currentProjectRoot, selectedFile).replace(/\\/g, '/');
+      return {
+        canceled: false,
+        filePath: selectedFile,
+        relativePath: rel.startsWith('..') ? selectedFile : rel,
+        name: path.basename(selectedFile),
+        content
+      };
+    } catch (err: any) {
+      console.error('[FS IPC] Open file dialog error:', err);
+      return { canceled: true, error: err.message };
+    } finally {
+      isFileDialogOpen = false;
     }
-    const selectedFile = result.filePaths[0];
-    const content = fs.readFileSync(selectedFile, 'utf8');
-    const rel = path.relative(currentProjectRoot, selectedFile).replace(/\\/g, '/');
-    return {
-      canceled: false,
-      filePath: selectedFile,
-      relativePath: rel.startsWith('..') ? selectedFile : rel,
-      name: path.basename(selectedFile),
-      content
-    };
   });
 
   ipcMain.handle(IPC_CHANNELS.FS_GET_TREE, async (_, relativeSubdir: string = '') => {
