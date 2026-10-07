@@ -487,6 +487,17 @@ const runCurrentFile = () => {
   }
 };
 
+const openExtensions = () => {
+  window.dispatchEvent(new CustomEvent('bstudio:open-extensions'));
+};
+
+const handleTextareaInput = (e: Event) => {
+  const target = e.target as HTMLTextAreaElement;
+  if (target && fsStore.activeFilePath) {
+    fsStore.updateContent(fsStore.activeFilePath, target.value);
+  }
+};
+
 const initMonaco = async () => {
   if (!editorContainer.value) return;
   try {
@@ -676,7 +687,7 @@ onBeforeUnmount(() => {
 
         <!-- Theme Badge -->
         <button
-          @click="window.dispatchEvent(new CustomEvent('bstudio:open-extensions'))"
+          @click="openExtensions"
           class="flex items-center gap-1 text-2xs text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded hover:bg-white/5 transition-colors"
           title="Active Theme (Change in Extensions)"
         >
@@ -770,7 +781,7 @@ onBeforeUnmount(() => {
       <textarea
         v-if="!editorInstance && fsStore.activeFile"
         :value="fsStore.activeFile.content"
-        @input="(e: any) => fsStore.updateContent(fsStore.activeFilePath, e.target.value)"
+        @input="handleTextareaInput"
         class="w-full h-full bg-sidebar text-zinc-200 font-mono text-xs p-4 focus:outline-none resize-none"
         spellcheck="false"
       ></textarea>

@@ -158,6 +158,16 @@ const triggerRestartTerminal = () => {
   window.dispatchEvent(new CustomEvent('bstudio:terminal-restart'));
 };
 
+const triggerToggleDevTools = () => {
+  closeMenu();
+  window.electronAPI?.toggleDevTools();
+};
+
+const triggerAiKeysModal = () => {
+  closeMenu();
+  browserStore.isApiKeyModalOpen = true;
+};
+
 const activeTitle = computed(() => {
   const fileName = fsStore.activeFile?.name || (fsStore.activeFilePath ? fsStore.activeFilePath.split(/[/\\]/).pop() : null);
   const project = fsStore.currentFolderName || 'Bstudio';
@@ -460,10 +470,10 @@ const activeTitle = computed(() => {
             v-if="activeMenu === 'help'"
             class="absolute left-0 top-8 w-60 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
-            <button @click="closeMenu(); browserStore.isApiKeyModalOpen = true;" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
+            <button @click="triggerAiKeysModal" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span class="flex items-center gap-2"><Sparkles class="w-3.5 h-3.5 text-accent-blue" /> AI Provider Keys (Gemini & Nebius)</span>
             </button>
-            <button @click="closeMenu(); window.electronAPI?.toggleDevTools();" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
+            <button @click="triggerToggleDevTools" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span class="flex items-center gap-2"><ExternalLink class="w-3.5 h-3.5 text-nvidia" /> Toggle Chrome DevTools</span>
               <kbd class="text-[10px] text-zinc-500 font-mono">F12</kbd>
             </button>
