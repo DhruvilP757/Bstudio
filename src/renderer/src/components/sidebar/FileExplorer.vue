@@ -130,7 +130,7 @@ const startSidebarResize = (e: PointerEvent) => {
     </div>
 
     <!-- Explorer Header & Action Toolbar -->
-    <div class="flex items-center justify-between px-3 h-9 border-b border-[#222226] shrink-0 bg-[#141418]">
+    <div class="flex items-center justify-between px-3 h-9 border-b border-border shrink-0 bg-[#101416]">
       <span class="font-semibold text-zinc-200 text-xs tracking-tight">Explorer</span>
 
       <!-- Action Buttons -->
@@ -270,7 +270,7 @@ const startSidebarResize = (e: PointerEvent) => {
             @keydown.enter.stop="submitCreateRootItem"
             @keydown.esc.stop="cancelCreateRootItem"
             @blur="submitCreateRootItem"
-            class="flex-1 bg-[#18181b] border border-nvidia rounded px-1.5 py-0.5 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia placeholder:text-zinc-600"
+            class="flex-1 bg-[#181f23] border border-nvidia rounded px-1.5 py-0.5 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia placeholder:text-zinc-600"
           />
         </div>
 

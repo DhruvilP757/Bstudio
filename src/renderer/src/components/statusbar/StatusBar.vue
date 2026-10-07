@@ -37,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-6 w-full bg-[#0e0e11] border-t border-[#222226] flex items-center justify-between px-3 shrink-0 z-30 select-none text-[11px] text-zinc-400 font-sans">
+  <div class="h-6 w-full bg-[#0c1013] border-t border-[#181f23] flex items-center justify-between px-3 shrink-0 z-30 select-none text-[11px] text-zinc-400 font-sans">
     <!-- Left Section: Git & Diagnostics -->
     <div class="flex items-center gap-3">
       <!-- Git Branch -->

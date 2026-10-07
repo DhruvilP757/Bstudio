@@ -96,7 +96,7 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
 </script>
 
 <template>
-  <div class="flex items-center gap-2.5 px-3 h-10 shrink-0 z-40 select-none bg-[#141418] border-b border-[#222226]">
+  <div class="flex items-center gap-2.5 px-3 h-10 shrink-0 z-40 select-none bg-[#13181a] border-b border-[#1b2327]">
 
     <!-- Browser Navigation Controls -->
     <div class="flex items-center gap-1 shrink-0">
@@ -129,7 +129,7 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
     <!-- Central Address Bar (Matched to Screenshot) -->
     <div class="flex-1 max-w-3xl no-drag">
       <div
-        class="flex items-center gap-2 h-7.5 px-3 rounded-lg bg-[#1a1a20] border border-[#2c2c34] transition-all duration-150 cursor-text"
+        class="flex items-center gap-2 h-7.5 px-3 rounded-lg bg-[#1a2023] border border-[#263036] transition-all duration-150 cursor-text"
         :class="isEditing ? 'border-[#76b900]/70 ring-1 ring-[#76b900]/20' : 'hover:border-[#383842]'"
         @click="!isEditing && urlInputRef?.focus()"
       >
@@ -163,7 +163,7 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
     <!-- Right Controls: View Switcher & DevTools -->
     <div class="flex items-center gap-2 shrink-0 no-drag ml-auto">
       <!-- Segmented View Mode Buttons (Exact Match to Screenshot) -->
-      <div class="flex items-center gap-1 bg-[#1a1a20] p-0.5 rounded-lg border border-[#2c2c34]">
+      <div class="flex items-center gap-1 bg-[#1a2023] p-0.5 rounded-lg border border-[#263036]">
         <button
           @click="setMode('editor')"
           :class="browserStore.activeViewMode === 'editor'
@@ -199,7 +199,7 @@ const setMode = (mode: 'editor' | 'split' | 'browser') => {
       <!-- DevTools Button (Bordered, matched to screenshot) -->
       <button
         @click="window.electronAPI?.toggleDevTools()"
-        class="h-7 px-2.5 bg-[#1a1a20] border border-[#2c2c34] hover:border-zinc-500 rounded-lg flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-colors"
+        class="h-7 px-2.5 bg-[#1a2023] border border-[#263036] hover:border-zinc-500 rounded-lg flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-colors"
         title="Toggle DevTools (F12)"
       >
         <Code2 class="w-3.5 h-3.5 text-zinc-400" />

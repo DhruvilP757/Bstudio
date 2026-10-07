@@ -179,7 +179,7 @@ const activeTitle = computed(() => {
 <template>
   <header
     ref="topNavbarRef"
-    class="w-full h-8 bg-[#111115] border-b border-border/80 flex items-center justify-between text-xs text-zinc-300 select-none shrink-0 z-50 relative app-drag"
+    class="w-full h-8 bg-[#101416] border-b border-border/80 flex items-center justify-between text-xs text-zinc-300 select-none shrink-0 z-50 relative app-drag"
   >
     <!-- Left Section: Logo & VS Code Menus -->
     <div class="flex items-center h-full no-drag">
@@ -203,7 +203,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('file')"
             @mouseenter="handleMenuHover('file')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'file' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'file' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             File
           </button>
@@ -211,7 +211,7 @@ const activeTitle = computed(() => {
           <!-- File Dropdown -->
           <div
             v-if="activeMenu === 'file'"
-            class="absolute left-0 top-8 w-60 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-60 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="triggerNewFile" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span class="flex items-center gap-2"><FileCode class="w-3.5 h-3.5 text-zinc-400" /> New File</span>
@@ -249,7 +249,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('edit')"
             @mouseenter="handleMenuHover('edit')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'edit' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'edit' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             Edit
           </button>
@@ -257,7 +257,7 @@ const activeTitle = computed(() => {
           <!-- Edit Dropdown -->
           <div
             v-if="activeMenu === 'edit'"
-            class="absolute left-0 top-8 w-56 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-56 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="closeMenu()" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span>Undo</span>
@@ -298,7 +298,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('selection')"
             @mouseenter="handleMenuHover('selection')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'selection' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'selection' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             Selection
           </button>
@@ -306,7 +306,7 @@ const activeTitle = computed(() => {
           <!-- Selection Dropdown -->
           <div
             v-if="activeMenu === 'selection'"
-            class="absolute left-0 top-8 w-56 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-56 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="closeMenu()" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span>Select All</span>
@@ -334,7 +334,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('view')"
             @mouseenter="handleMenuHover('view')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'view' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'view' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             View
           </button>
@@ -342,7 +342,7 @@ const activeTitle = computed(() => {
           <!-- View Dropdown -->
           <div
             v-if="activeMenu === 'view'"
-            class="absolute left-0 top-8 w-64 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-64 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="triggerSidebarTab('explorer')" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span>File Explorer</span>
@@ -395,7 +395,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('go')"
             @mouseenter="handleMenuHover('go')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'go' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'go' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             Go
           </button>
@@ -403,7 +403,7 @@ const activeTitle = computed(() => {
           <!-- Go Dropdown -->
           <div
             v-if="activeMenu === 'go'"
-            class="absolute left-0 top-8 w-56 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-56 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="closeMenu(); browserStore.goBack();" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span>Back in Browser</span>
@@ -430,7 +430,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('terminal')"
             @mouseenter="handleMenuHover('terminal')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'terminal' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'terminal' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             Terminal
           </button>
@@ -438,7 +438,7 @@ const activeTitle = computed(() => {
           <!-- Terminal Dropdown -->
           <div
             v-if="activeMenu === 'terminal'"
-            class="absolute left-0 top-8 w-60 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-60 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="triggerNewTerminal" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span class="flex items-center gap-2"><Terminal class="w-3.5 h-3.5 text-nvidia" /> New Terminal</span>
@@ -460,7 +460,7 @@ const activeTitle = computed(() => {
             @click.stop="handleMenuClick('help')"
             @mouseenter="handleMenuHover('help')"
             class="px-2.5 h-full flex items-center text-[12px] font-sans transition-colors rounded-none"
-            :class="activeMenu === 'help' ? 'bg-[#27272e] text-white' : 'hover:bg-white/5 text-zinc-300'"
+            :class="activeMenu === 'help' ? 'bg-[#1a2227] text-white' : 'hover:bg-white/5 text-zinc-300'"
           >
             Help
           </button>
@@ -468,7 +468,7 @@ const activeTitle = computed(() => {
           <!-- Help Dropdown -->
           <div
             v-if="activeMenu === 'help'"
-            class="absolute left-0 top-8 w-60 bg-[#16161b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
+            class="absolute left-0 top-8 w-60 bg-[#12181b] border border-border/90 rounded-md shadow-2xl py-1 z-50 text-[12px] text-zinc-300 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100"
           >
             <button @click="triggerAiKeysModal" class="w-full flex items-center justify-between px-3 py-1.5 hover:bg-nvidia/15 hover:text-white transition-colors text-left">
               <span class="flex items-center gap-2"><Sparkles class="w-3.5 h-3.5 text-accent-blue" /> AI Provider Keys (Gemini & Nebius)</span>

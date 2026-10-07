@@ -127,7 +127,7 @@ const startCopilotResize = (e: PointerEvent) => {
   <Transition name="sidebar">
     <div
       v-if="browserStore.isCopilotOpen"
-      class="relative h-full bg-[#141418] border-l border-[#222226] flex flex-col shrink-0 z-20 overflow-hidden select-none"
+      class="relative h-full bg-[#101416] border-l border-[#181f23] flex flex-col shrink-0 z-20 overflow-hidden select-none"
       :style="{
         width: browserStore.copilotWidth + 'px',
         transition: browserStore.isDraggingResizer ? 'none' : 'width 150ms ease'
@@ -143,7 +143,7 @@ const startCopilotResize = (e: PointerEvent) => {
       </div>
 
       <!-- Header (Matched to Reference Screenshot) -->
-      <div class="flex items-center justify-between px-3 h-10 border-b border-[#222226] shrink-0 bg-[#141418]">
+      <div class="flex items-center justify-between px-3 h-10 border-b border-[#181f23] shrink-0 bg-[#101416]">
         <!-- Title with Nemotron Badge -->
         <div class="flex items-center gap-2">
           <div class="w-6 h-6 rounded-md bg-[#76b900]/20 border border-[#76b900]/50 flex items-center justify-center text-[#7ee712]">
@@ -181,7 +181,7 @@ const startCopilotResize = (e: PointerEvent) => {
       <div class="px-3 pt-2 pb-1.5 shrink-0 relative">
         <button
           @click="isModelMenuOpen = !isModelMenuOpen"
-          class="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#1c1c22] border border-[#2c2c34] hover:border-zinc-500 text-xs text-zinc-200 transition-colors"
+          class="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#181f23] border border-[#263036] hover:border-zinc-500 text-xs text-zinc-200 transition-colors"
         >
           <span class="font-sans">{{ activeModelLabel() }}</span>
           <ChevronDown class="w-3.5 h-3.5 text-zinc-400 transition-transform" :class="{ 'rotate-180': isModelMenuOpen }" />
@@ -190,7 +190,7 @@ const startCopilotResize = (e: PointerEvent) => {
         <!-- Model Dropdown -->
         <div
           v-if="isModelMenuOpen"
-          class="absolute left-3 right-3 top-10 mt-1 bg-[#1c1c22] border border-[#2c2c34] rounded-lg shadow-2xl py-1 z-50 text-xs text-zinc-200"
+          class="absolute left-3 right-3 top-10 mt-1 bg-[#181f23] border border-[#263036] rounded-lg shadow-2xl py-1 z-50 text-xs text-zinc-200"
         >
           <button
             v-for="m in models"
@@ -226,7 +226,7 @@ const startCopilotResize = (e: PointerEvent) => {
         <!-- Welcome Card (Matching Reference Screenshot 1) -->
         <div
           v-if="chatStore.messages.length === 0"
-          class="bg-[#18181f] border border-[#2c2c34] rounded-xl p-4 my-2 text-xs"
+          class="bg-[#14191c] border border-[#263036] rounded-xl p-4 my-2 text-xs"
         >
           <h3 class="font-semibold text-zinc-100 text-sm mb-1">Welcome to Nemotron Assistant</h3>
           <p class="text-zinc-400 text-xs mb-4 leading-relaxed">
@@ -273,8 +273,8 @@ const startCopilotResize = (e: PointerEvent) => {
       </div>
 
       <!-- Composer Card (Matched to Reference Screenshot) -->
-      <div class="p-3 border-t border-[#222226] shrink-0 bg-[#141418]">
-        <div class="bg-[#1a1a20] border border-[#2c2c34] rounded-xl p-2.5 transition-colors focus-within:border-zinc-500">
+      <div class="p-3 border-t border-[#181f23] shrink-0 bg-[#101416]">
+        <div class="bg-[#181f23] border border-[#263036] rounded-xl p-2.5 transition-colors focus-within:border-zinc-500">
           <textarea
             v-model="inputPrompt"
             @keydown="handleKeyDown"
@@ -285,7 +285,7 @@ const startCopilotResize = (e: PointerEvent) => {
           />
 
           <!-- Composer Toolbar Row -->
-          <div class="flex items-center justify-between pt-1.5 mt-1 border-t border-[#24242c] text-zinc-400">
+          <div class="flex items-center justify-between pt-1.5 mt-1 border-t border-[#222a30] text-zinc-400">
             <!-- Left contextual pills / actions -->
             <div class="flex items-center gap-1.5">
               <button

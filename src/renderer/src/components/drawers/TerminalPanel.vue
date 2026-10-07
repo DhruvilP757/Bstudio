@@ -40,10 +40,10 @@ const initTerminal = async () => {
     letterSpacing: 0.3,
     fontFamily:   "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, Menlo, monospace",
     theme: {
-      background:         '#0d0d0f',
+      background:         '#0c1013',
       foreground:         '#e4e4e7',
       cursor:             '#76b900',
-      cursorAccent:       '#0d0d0f',
+      cursorAccent:       '#0c1013',
       selectionBackground:'rgba(118,185,0,0.3)',
       black:   '#18181b', red:    '#f87171', green:   '#4ade80', yellow: '#fbbf24',
       blue:    '#60a5fa', magenta:'#c084fc', cyan:    '#34d399', white:  '#e4e4e7',
@@ -153,14 +153,14 @@ onBeforeUnmount(() => {
 <template>
   <div
     ref="containerRef"
-    class="w-full h-full flex flex-col overflow-hidden bg-[#0d0d0f] cursor-text"
+    class="w-full h-full flex flex-col overflow-hidden bg-[#0c1013] cursor-text"
     @click="focusTerminal"
     tabindex="0"
   >
     <!-- Tab bar for multiple terminal sessions & actions (shown if >1 session) -->
     <div
       v-if="terminalStore.sessions.length > 1"
-      class="flex items-center justify-between bg-[#141418] border-b border-[#222226] h-7 px-2 shrink-0 select-none"
+      class="flex items-center justify-between bg-[#0e1214] border-b border-[#181f23] h-7 px-2 shrink-0 select-none"
     >
       <div class="flex items-center gap-1 overflow-x-auto">
         <button

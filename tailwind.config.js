@@ -8,14 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas:      '#0d0d0f',
-        surface:     '#111113',
-        sidebar:     '#141416',
-        elevated:    '#1a1a1e',
-        subtle:      '#222226',
-        border:      '#2a2a2e',
-        borderHover: '#3a3a40',
-        muted:       '#52525b',
+        canvas:      '#0c1013',
+        surface:     '#0f1416',
+        sidebar:     '#101416',
+        elevated:    '#181f23',
+        subtle:      '#1f272c',
+        border:      '#1b2327',
+        borderHover: '#29363d',
+        muted:       '#526068',
         nvidia: {
           DEFAULT:  '#76b900',
           bright:   '#8bd000',

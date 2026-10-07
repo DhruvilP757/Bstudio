@@ -68,7 +68,7 @@ const parsedSections = computed<Section[]>(() => {
       class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs select-none"
       :class="message.role === 'assistant'
         ? 'bg-[#76b900] text-black font-bold shadow-glow-green'
-        : 'bg-[#2e2e36] text-zinc-200 font-semibold'"
+        : 'bg-[#1d252a] text-zinc-200 font-semibold'"
     >
       <Bot v-if="message.role === 'assistant'" class="w-4 h-4" />
       <span v-else class="text-[11px] font-sans">You</span>
@@ -100,10 +100,10 @@ const parsedSections = computed<Section[]>(() => {
           <!-- Code Block Card (Exact match to screenshot) -->
           <div
             v-else-if="sec.type === 'code'"
-            class="my-2 bg-[#121215] border border-[#2a2a32] rounded-lg overflow-hidden text-xs"
+            class="my-2 bg-[#0d1113] border border-[#1e262c] rounded-lg overflow-hidden text-xs"
           >
             <!-- Code Block Header -->
-            <div class="flex items-center justify-between px-3 py-1.5 bg-[#18181e] border-b border-[#2a2a32] text-zinc-400 select-none">
+            <div class="flex items-center justify-between px-3 py-1.5 bg-[#13181a] border-b border-[#1e262c] text-zinc-400 select-none">
               <span class="font-mono text-2xs text-zinc-300">{{ sec.lang || 'code' }}</span>
               <button
                 @click="handleCopy(sec.content, idx)"

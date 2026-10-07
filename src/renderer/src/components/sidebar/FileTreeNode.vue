@@ -252,7 +252,7 @@ const extColor = (ext?: string, name?: string) => {
           @keydown.enter.stop="submitRename"
           @keydown.esc.stop="cancelRename"
           @blur="submitRename"
-          class="w-full bg-[#18181b] border border-nvidia/60 rounded px-1 py-0 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia"
+          class="w-full bg-[#181f23] border border-nvidia/60 rounded px-1 py-0 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia"
         />
         <span v-else class="truncate text-xs font-normal select-none">{{ node.name }}</span>
       </div>
@@ -303,7 +303,7 @@ const extColor = (ext?: string, name?: string) => {
         @keydown.enter.stop="submitCreateChild"
         @keydown.esc.stop="cancelCreateChild"
         @blur="submitCreateChild"
-        class="flex-1 bg-[#18181b] border border-nvidia rounded px-1.5 py-0.5 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia placeholder:text-zinc-600"
+        class="flex-1 bg-[#181f23] border border-nvidia rounded px-1.5 py-0.5 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia placeholder:text-zinc-600"
       />
     </div>
 
@@ -331,10 +331,10 @@ const extColor = (ext?: string, name?: string) => {
       v-else-if="!node.isDirectory"
       @click="fsStore.openFile(node.path)"
       @contextmenu="openContextMenu"
-      class="w-full flex items-center py-[3.5px] pr-2 rounded-none transition-colors text-left group/row"
+      class="flex items-center py-[3.5px] pr-2 mx-1 w-[calc(100%-8px)] rounded-md transition-colors text-left group/row"
       :class="fsStore.activeFilePath === node.path
-        ? 'bg-[#181d19] text-white border-l-2 border-[#76b900] font-medium'
-        : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] border-l-2 border-transparent'"
+        ? 'bg-[#272d32] text-white font-medium shadow-sm'
+        : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'"
       :style="{ paddingLeft: `${currentDepth * 14 + 6}px` }"
     >
       <!-- 16px Spacer perfectly matching Folder's Chevron -->
@@ -357,7 +357,7 @@ const extColor = (ext?: string, name?: string) => {
           @keydown.enter.stop="submitRename"
           @keydown.esc.stop="cancelRename"
           @blur="submitRename"
-          class="w-full bg-[#18181b] border border-nvidia/60 rounded px-1 py-0 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia"
+          class="w-full bg-[#181f23] border border-nvidia/60 rounded px-1 py-0 text-xs text-white outline-none focus:ring-1 focus:ring-nvidia"
         />
         <span v-else class="truncate text-xs font-normal">{{ node.name }}</span>
       </div>

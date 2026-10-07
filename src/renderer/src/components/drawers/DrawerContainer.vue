@@ -75,7 +75,7 @@ const startDrawerResize = (e: PointerEvent) => {
   <Transition name="drawer">
     <div
       v-if="browserStore.isDrawerOpen"
-      class="w-full bg-[#121215] border-t border-[#222226] flex flex-col shrink-0 z-20 overflow-hidden relative"
+      class="w-full bg-[#0c1013] border-t border-[#181f23] flex flex-col shrink-0 z-20 overflow-hidden relative"
       :style="{
         height: browserStore.drawerHeight + 'px',
         transition: browserStore.isDraggingResizer ? 'none' : 'height 180ms ease'
@@ -91,7 +91,7 @@ const startDrawerResize = (e: PointerEvent) => {
       </div>
 
       <!-- Tab bar (Matched to Reference Screenshot) -->
-      <div class="flex items-center bg-[#141418] border-b border-[#222226] px-2 h-8.5 shrink-0 select-none">
+      <div class="flex items-center bg-[#0e1214] border-b border-[#181f23] px-2 h-8.5 shrink-0 select-none">
         <!-- Left Tabs -->
         <div class="flex items-center flex-1 h-full">
           <button
@@ -171,7 +171,7 @@ const startDrawerResize = (e: PointerEvent) => {
       </div>
 
       <!-- Drawer Content Panels -->
-      <div class="flex-1 overflow-hidden relative bg-[#101014]">
+      <div class="flex-1 overflow-hidden relative bg-[#0c1013]">
         <TerminalPanel v-show="browserStore.activeDrawerTab === 'terminal'" />
         <ConsolePanel v-show="browserStore.activeDrawerTab === 'console'" />
         <NetworkPanel v-show="browserStore.activeDrawerTab === 'network'" />

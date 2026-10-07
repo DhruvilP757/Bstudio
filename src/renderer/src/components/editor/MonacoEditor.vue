@@ -59,11 +59,12 @@ const defineThemes = () => {
       { token: 'variable', foreground: 'e06c75' }
     ],
     colors: {
-      'editor.background': '#141418',
+      'editor.background': '#0c1013',
       'editor.foreground': '#e4e4e7',
-      'editor.lineHighlightBackground': '#1a1a20',
+      'editor.lineHighlightBackground': '#12181b',
       'editorCursor.foreground': '#76b900',
-      'editorLineNumber.foreground': '#495162'
+      'editorLineNumber.foreground': '#425059',
+      'editorLineNumber.activeForeground': '#76b900'
     }
   });
 
@@ -656,16 +657,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col bg-[#141418] select-none">
+  <div class="w-full h-full flex flex-col bg-[#0c1013] select-none">
     <!-- Editor Tabs Bar (Matched to Reference Screenshot) -->
-    <div class="flex items-center bg-[#141418] border-b border-[#222226] overflow-x-auto text-xs shrink-0 h-9">
+    <div class="flex items-center bg-[#0e1214] border-b border-[#181f23] overflow-x-auto text-xs shrink-0 h-9">
       <div
         v-for="file in fsStore.openFiles"
         :key="file.path"
         @click="fsStore.activeFilePath = file.path"
-        class="flex items-center gap-2 px-3 h-full border-r border-[#222226] cursor-pointer transition-colors"
+        class="flex items-center gap-2 px-3 h-full border-r border-[#181f23] cursor-pointer transition-colors"
         :class="fsStore.activeFilePath === file.path
-          ? 'bg-[#1b1b22] text-white border-t-2 border-t-[#76b900] font-medium'
+          ? 'bg-[#12181b] text-white border-t-2 border-t-[#76b900] font-medium'
           : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border-t-2 border-t-transparent'"
       >
         <component :is="getTabIcon(file.name)" class="w-3.5 h-3.5" :class="getTabColor(file.name)" />
@@ -733,7 +734,7 @@ onBeforeUnmount(() => {
     <!-- Breadcrumb Row (Direct match to reference screenshot) -->
     <div
       v-if="fsStore.activeFile"
-      class="flex items-center gap-1.5 px-4 h-6 bg-[#16161b] border-b border-[#222226] text-[11px] text-zinc-400 shrink-0 font-sans select-none"
+      class="flex items-center gap-1.5 px-4 h-6 bg-[#0f1416] border-b border-[#181f23] text-[11px] text-zinc-400 shrink-0 font-sans select-none"
     >
       <span class="text-zinc-500 hover:text-zinc-300 cursor-pointer">src</span>
       <span class="text-zinc-600">></span>
